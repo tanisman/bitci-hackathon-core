@@ -40,6 +40,8 @@ contract DonateciListing {
         _isCreator[msg.sender] = true;
         _creators[newId] = msg.sender;
 
+        //TO DO: emit event
+
         return true;
     }
 
@@ -64,7 +66,9 @@ contract DonateciListing {
         //add new listing
         _nftListings[newId] = NFTListingInfo({
             creatorAddress: msg.sender, tokenId: _tokenId, 
-            priceInWeiDNC: _desiredPriceInWeiDNC, sold: false});  
+            priceInWeiDNC: _desiredPriceInWeiDNC, sold: false});
+
+        //TO DO: emit event 
         
         return true;
     }
@@ -87,6 +91,8 @@ contract DonateciListing {
         require(!listing.sold);  //validate if not sold
         require(Donateci(DNC).transfer(listing.creatorAddress, listing.priceInWeiDNC)); //pay to creator (we can get commission here)
         DonateciNFT(DNFT).transferFrom(address(this), msg.sender, listing.tokenId); //transfer ownership of NFT
+
+        //TO DO: emit event
 
         return true;
     }
