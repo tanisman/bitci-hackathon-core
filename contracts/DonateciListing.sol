@@ -24,6 +24,10 @@ contract DonateciListing {
     address public immutable DNC;
     address public immutable DNFT;
 
+    event NewCreator(address indexed creator);
+    event NewNFTListing(address indexed seller, uint256 listingId);
+    event NFTSold(address indexed seller, address indexed buyer, uint256 id, uint256 price);
+
     constructor(address _dnc, address _dnft) {
         DNC = _dnc;
         DNFT = _dnft;
@@ -40,7 +44,7 @@ contract DonateciListing {
         _isCreator[msg.sender] = true;
         _creators[newId] = msg.sender;
 
-        //TO DO: emit event
+        emit NewCreator(msg.sender);
 
         return true;
     }
@@ -68,7 +72,7 @@ contract DonateciListing {
             creatorAddress: msg.sender, tokenId: _tokenId, 
             priceInWeiDNC: _desiredPriceInWeiDNC, sold: false});
 
-        //TO DO: emit event 
+        emit NewNFTListing(msg.sender, newId);
         
         return true;
     }
@@ -92,7 +96,7 @@ contract DonateciListing {
         require(Donateci(DNC).transfer(listing.creatorAddress, listing.priceInWeiDNC)); //pay to creator (we can get commission here)
         DonateciNFT(DNFT).transferFrom(address(this), msg.sender, listing.tokenId); //transfer ownership of NFT
 
-        //TO DO: emit event
+        emit NFTSold(listing.creatorAddress, msg.sender, _idx, listing.priceInWeiDNC);
 
         return true;
     }
