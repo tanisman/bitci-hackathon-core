@@ -10,6 +10,8 @@ contract DonateciNFT is ERC721, ERC721Enumerable, ERC721URIStorage {
   using Counters for Counters.Counter;
   Counters.Counter private _tokenIds;
 
+  event MintDNFT(address indexed owner, uint256 tokenId);
+
   constructor() ERC721("DonateciNFT", "DNFT") {
 
   }
@@ -54,6 +56,9 @@ contract DonateciNFT is ERC721, ERC721Enumerable, ERC721URIStorage {
     uint256 newId = _tokenIds.current();
     _mint(owner, newId); //mint new nft on this ERC721
     _setTokenURI(newId, tURI); //set uri (e.g. ipfs uri)
+
+    emit MintDNFT(owner, newId);
+
     return newId;
   }
 }
