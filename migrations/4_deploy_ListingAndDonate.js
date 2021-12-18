@@ -10,4 +10,5 @@ module.exports = async function (deployer) {
     await deployer.deploy(DonateciListing, dnc.address, dnft.address);
     const listing = await DonateciListing.deployed();
     await deployer.deploy(DonateciDonate, listing.address);
+    await DonateciDonate.deployed();
 };

@@ -1,5 +1,5 @@
-const Factory = artifacts.require("UniswapV2Factory");
-const Router = artifacts.require("UniswapV2Router02");
+const Factory = artifacts.require("IUniswapV2Factory");
+const Router = artifacts.require("IUniswapV2Router02");
 const Donateci = artifacts.require("Donateci");
 const IWBITCI = artifacts.require("IWBITCI");
 
