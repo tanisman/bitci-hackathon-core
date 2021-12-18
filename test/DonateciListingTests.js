@@ -62,4 +62,23 @@ contract("DonateciListing", async accounts => {
         assert.equal(nftSoldEvent.args["2"], listedTokenId);
         assert.equal(nftSoldEvent.args["1"], accounts[1]);
     });
+
+    it("should list all creators", async () => {
+        const listing = await DonateciListing.deployed();
+        const count = await listing.getCreatorCount.call();
+        for (let i = 1; i <= count; i++) {
+            const creator = await listing.getCreatorAt.call(i);
+            console.log(creator);
+        }
+    });
+
+    it("should list all nft listing", async () => {
+        const listing = await DonateciListing.deployed();
+        const count = await listing.getNFTListingCount.call();
+        for (let i = 1; i <= count; i++) {
+            const nft = await listing.getNFTListingAt.call(i);
+            console.log(nft);
+        }
+    });
+
 });
