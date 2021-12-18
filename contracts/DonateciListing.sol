@@ -36,7 +36,7 @@ contract DonateciListing {
     function becomeCreator() public returns (bool) {
         require(!_isCreator[msg.sender], "DonateciListing: already creator");
         Donateci dncContract = Donateci(DNC);
-        require(dncContract.transfer(address(0x0), _creatorBurnFee * 10 ** dncContract.decimals()), "DonateciListing: not enough fee");
+        require(dncContract.transferFrom(msg.sender, DNC, _creatorBurnFee * (10 ** dncContract.decimals())), "DonateciListing: not enough fee");
                 
         _creatorIds.increment();
         uint256 newId = _creatorIds.current();
@@ -93,7 +93,7 @@ contract DonateciListing {
     function buyNFT(uint256 _idx) public returns (bool) {
         NFTListingInfo storage listing = _nftListings[_idx];
         require(!listing.sold, "DonateciListing: already sold");  //validate if not sold
-        require(Donateci(DNC).transfer(listing.creatorAddress, listing.priceInWeiDNC), "DonateciListing: not enough funds"); //pay to creator (we can get commission here)
+        require(Donateci(DNC).transferFrom(msg.sender, listing.creatorAddress, listing.priceInWeiDNC), "DonateciListing: not enough funds"); //pay to creator (we can get commission here)
         DonateciNFT(DNFT).transferFrom(address(this), msg.sender, listing.tokenId); //transfer ownership of NFT
 
         emit NFTSold(listing.creatorAddress, msg.sender, _idx, listing.priceInWeiDNC);
