@@ -23,8 +23,8 @@ contract DonateciDonate {
     }
 
     function donate(address _to, uint256 _amountInWei, string memory _message) public {
-        require(DonateciListing(_listing).isCreator(_to));
-        require(Donateci(DonateciListing(_listing).DNC()).transfer(_to, _amountInWei));
+        require(DonateciListing(_listing).isCreator(_to), "DonateciDonate: _to must be a creator");
+        require(Donateci(DonateciListing(_listing).DNC()).transfer(_to, _amountInWei), "DonateciDonate: transfer failed");
         _totals[_to][msg.sender] += _amountInWei;
 
         emit Donation(msg.sender, _to, _amountInWei, _message);
