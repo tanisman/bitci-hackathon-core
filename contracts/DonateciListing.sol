@@ -92,7 +92,7 @@ contract DonateciListing {
 
     function buyNFT(uint256 _idx) public returns (bool) {
         NFTListingInfo storage listing = _nftListings[_idx];
-        require(!listing.soldi, "DonateciListing: already sold");  //validate if not sold
+        require(!listing.sold, "DonateciListing: already sold");  //validate if not sold
         require(Donateci(DNC).transfer(listing.creatorAddress, listing.priceInWeiDNC), "DonateciListing: not enough funds"); //pay to creator (we can get commission here)
         DonateciNFT(DNFT).transferFrom(address(this), msg.sender, listing.tokenId); //transfer ownership of NFT
 
