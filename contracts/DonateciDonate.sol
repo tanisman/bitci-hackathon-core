@@ -16,12 +16,15 @@ contract DonateciDonate {
     mapping(address => mapping(address => uint256)) private _totals;
     mapping(address => Leaderboard) private _leaderboard;
 
+    //fired when new donation happened
     event Donation(address indexed from, address indexed to, uint256 value, string message);
+    //fire when after a donation, sum of donation of a donater is new max.
     event NewLeader(address indexed creator, address indexed leader);
     constructor(address _listingAddress) {
         _listing = _listingAddress;
     }
 
+    //an user calls this to send a donate to creator
     function donate(address _to, uint256 _amountInWei, string memory _message) public {
         require(DonateciListing(_listing).isCreator(_to), "DonateciDonate: _to must be a creator");
         require(Donateci(DonateciListing(_listing).DNC()).transferFrom(msg.sender, _to, _amountInWei), "DonateciDonate: transfer failed");
@@ -37,11 +40,13 @@ contract DonateciDonate {
         }
     }
 
+    //gets donation leaderboard of a creator
     function getLeaderBoardOf(address _creator) public view returns (address top1Address, uint256 top1Amount) {
         Leaderboard storage lb = _leaderboard[_creator];
         return (lb.top1Address, lb.top1Amount);
     }
 
+    //gets total donation of an user to a creator
     function getTotalDonatedTo(address _to, address _from) public view returns (uint256) {
         return _totals[_to][_from];
     }

@@ -24,8 +24,11 @@ contract DonateciListing {
     address public immutable DNC;
     address public immutable DNFT;
 
+    //fired when an user became creator by calling becomeCreator()
     event NewCreator(address indexed creator);
+    //fired when new nft added to sell list
     event NewNFTListing(address indexed seller, uint256 listingId);
+    //fired when a nft sold
     event NFTSold(address indexed seller, address indexed buyer, uint256 id, uint256 price);
 
     constructor(address _dnc, address _dnft) {
@@ -33,6 +36,7 @@ contract DonateciListing {
         DNFT = _dnft;
     }
 
+    //an user calls this to become creator
     function becomeCreator() public returns (bool) {
         require(!_isCreator[msg.sender], "DonateciListing: already creator");
         Donateci dncContract = Donateci(DNC);
@@ -49,18 +53,22 @@ contract DonateciListing {
         return true;
     }
 
+    //gets total num of creators
     function getCreatorCount() public view returns (uint256) {
         return _creatorIds.current();
     }
 
+    //gets creator at index
     function getCreatorAt(uint256 _idx) public view returns (address) {
         return _creators[_idx];
     }
 
+    //gets if address is creator
     function isCreator(address _addr) public view returns (bool) {
         return _isCreator[_addr];
     }
 
+    //add nft to marketplace, call approve DNFT first.
     function addNFTListing(uint256 _tokenId, uint256 _desiredPriceInWeiDNC) public returns (bool) {
         //change NFT ownership to this contract
         DonateciNFT(DNFT).transferFrom(msg.sender, address(this), _tokenId); //now contract owns the NFT
@@ -77,10 +85,12 @@ contract DonateciListing {
         return true;
     }
 
+    //get num of nfts on marketplace
     function getNFTListingCount() public view returns (uint256) {
         return _nftListingIds.current();
     }
 
+    //get nft listing at index
     function getNFTListingAt(uint256 _idx) public view returns (address creator, uint256 tokenId, uint256 priceInWeiDNC) {
         NFTListingInfo storage listing = _nftListings[_idx];
         if (listing.sold) { //if already sold
@@ -90,6 +100,7 @@ contract DonateciListing {
         }
     }
     
+    //buy nft from marketplace, call approve DNC first.
     function buyNFT(uint256 _idx) public returns (bool) {
         NFTListingInfo storage listing = _nftListings[_idx];
         require(!listing.sold, "DonateciListing: already sold");  //validate if not sold

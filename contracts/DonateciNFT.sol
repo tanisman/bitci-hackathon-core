@@ -57,7 +57,7 @@ contract DonateciNFT is ERC721, ERC721Enumerable, ERC721URIStorage {
     _mint(owner, newId); //mint new nft on this ERC721
     _setTokenURI(newId, tURI); //set uri (e.g. ipfs uri)
 
-    emit MintDNFT(owner, newId);
+    emit MintDNFT(owner, newId)
 
     return newId;
   }
