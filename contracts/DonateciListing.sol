@@ -89,12 +89,14 @@ contract DonateciListing {
             return (listing.creatorAddress, listing.tokenId, listing.priceInWeiDNC);
         }
     }
-
+    
     function buyNFT(uint256 _idx) public returns (bool) {
         NFTListingInfo storage listing = _nftListings[_idx];
         require(!listing.sold, "DonateciListing: already sold");  //validate if not sold
         require(Donateci(DNC).transferFrom(msg.sender, listing.creatorAddress, listing.priceInWeiDNC), "DonateciListing: not enough funds"); //pay to creator (we can get commission here)
         DonateciNFT(DNFT).transferFrom(address(this), msg.sender, listing.tokenId); //transfer ownership of NFT
+        
+        listing.sold = true;
 
         emit NFTSold(listing.creatorAddress, msg.sender, _idx, listing.priceInWeiDNC);
 
